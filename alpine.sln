@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.api", "alpine.api\alpine.api.csproj", "{D190A159-A88B-4D58-AC36-60FD9FBB9D18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.authorization", "alpine.authorization\alpine.authorization.csproj", "{72B3B7AA-59F1-47A2-9911-3C452E2DFD88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{D190A159-A88B-4D58-AC36-60FD9FBB9D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D190A159-A88B-4D58-AC36-60FD9FBB9D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D190A159-A88B-4D58-AC36-60FD9FBB9D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72B3B7AA-59F1-47A2-9911-3C452E2DFD88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72B3B7AA-59F1-47A2-9911-3C452E2DFD88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72B3B7AA-59F1-47A2-9911-3C452E2DFD88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72B3B7AA-59F1-47A2-9911-3C452E2DFD88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
