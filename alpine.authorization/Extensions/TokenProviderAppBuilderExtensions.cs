@@ -1,12 +1,15 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace alpine.authorization
 {
 	public static class TokenProviderAppBuilderExtensions
 	{
-		public static IApplicationBuilder UseSimpleTokenProvider(this IApplicationBuilder app, TokenProviderOptions options)
+		public static IApplicationBuilder UseSimpleTokenProvider(
+			this IApplicationBuilder app, TokenProviderOptions options, 
+			TokenValidationParameters tokenValidationParameters)
 		{
 			if (app == null)
 			{
@@ -18,7 +21,12 @@ namespace alpine.authorization
 				throw new ArgumentNullException(nameof(options));
 			}
 
-			return app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
+			if (tokenValidationParameters == null)
+			{
+				throw new ArgumentNullException(nameof(tokenValidationParameters));
+			}
+
+			return app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options), tokenValidationParameters);
 		}
 	}
 }

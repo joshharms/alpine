@@ -15,6 +15,12 @@ namespace alpine.authorization
 		public string Path { get; set; } = "/token";
 
 		/// <summary>
+		/// The relative path for refresh token.
+		/// </summary>
+		/// <remarks>The default path is <c>/refresh-token</c></remarks>
+		public string RefreshPath { get; set; } = "/refresh-token";
+
+		/// <summary>
 		///  The Issuer (iss) claim for generated tokens.
 		/// </summary>
 		public string Issuer { get; set; }
@@ -28,7 +34,7 @@ namespace alpine.authorization
 		/// The expiration time for the generated tokens.
 		/// </summary>
 		/// <remarks>The default is five minutes (300 seconds).</remarks>
-		public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(5);
+		public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(1);
 
 		/// <summary>
 		/// The signing key to use when generating tokens.

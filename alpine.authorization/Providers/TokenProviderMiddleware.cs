@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json;
 
@@ -16,15 +17,24 @@ namespace alpine.authorization
 	{
 		private readonly RequestDelegate _next;
 		private readonly TokenProviderOptions _options;
+		private readonly TokenValidationParameters _tokenValidationParameters;
 		private readonly ILogger _logger;
 		private readonly JsonSerializerSettings _serializerSettings;
 
-		public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options, ILoggerFactory loggerFactory)
+		public TokenProviderMiddleware(
+			RequestDelegate next, IOptions<TokenProviderOptions> options, 
+			TokenValidationParameters tokenValidationParameters, ILoggerFactory loggerFactory)
 		{
 			_next = next;
 			_logger = loggerFactory.CreateLogger<TokenProviderMiddleware>();
 
+			_tokenValidationParameters = tokenValidationParameters;
+
 			_options = options.Value;
+			if (tokenValidationParameters == null)
+			{
+				throw new ArgumentNullException(nameof(tokenValidationParameters));
+			}
 			ThrowIfInvalidOptions(_options);
 
 			_serializerSettings = new JsonSerializerSettings
@@ -35,8 +45,12 @@ namespace alpine.authorization
 
 		public Task Invoke(HttpContext context)
 		{
+			// first figure out whether this is a request for a new token or for a refresh
+			bool isCreate = context.Request.Path.Equals(_options.Path, StringComparison.Ordinal);
+			bool isRefresh = !isCreate && context.Request.Path.Equals(_options.RefreshPath, StringComparison.Ordinal);
+
 			// If the request path doesn't match, skip
-			if (!context.Request.Path.Equals(_options.Path, StringComparison.Ordinal))
+			if (!isCreate && !isRefresh)
 			{
 				return _next(context);
 			}
@@ -49,7 +63,16 @@ namespace alpine.authorization
 				return context.Response.WriteAsync("Bad request.");
 			}
 
-			return GenerateToken(context);
+			_logger.LogInformation($"Handling request for {(isCreate ? "create token" : "refresh token")}: " + context.Request.Path);
+
+			if (isCreate)
+			{
+				return GenerateToken(context);
+			}
+			else
+			{
+				return IssueRefreshedToken(context);
+			}
 		}
 
 		private async Task GenerateToken(HttpContext context)
@@ -84,6 +107,43 @@ namespace alpine.authorization
 				notBefore: now,
 				expires: now.Add(_options.Expiration),
 				signingCredentials: _options.SigningCredentials);
+			await WriteTokenResponse(context, jwt);
+		}
+
+		private Task IssueRefreshedToken(HttpContext context)
+		{
+			try
+			{
+				// first extract token text from Authorization header
+				string authenticationText = context.Request.Headers["Authorization"].ToString();
+				int firstSpace = authenticationText.IndexOf(" ");
+				string tokenText = authenticationText.Substring(firstSpace + 1);
+
+				var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+				SecurityToken originalToken;
+				// validate token using validation parameters
+				var claimsi = jwtSecurityTokenHandler.ValidateToken(tokenText, _tokenValidationParameters, out originalToken);
+				var now = DateTime.UtcNow;
+				// create a new token based on original one 
+				// apply new expiration
+				var jwt = new JwtSecurityToken(
+				 issuer: _options.Issuer,
+				 audience: _options.Audience,
+				 claims: ((JwtSecurityToken)originalToken).Claims,
+				 notBefore: now,
+				 expires: now.Add(_options.Expiration),
+				 signingCredentials: _options.SigningCredentials);
+				return WriteTokenResponse(context, jwt);
+			}
+			catch
+			{
+				context.Response.StatusCode = 400;
+				return context.Response.WriteAsync("Bad request or invalid token.");
+			}
+		}
+
+		private async Task WriteTokenResponse(HttpContext context, JwtSecurityToken jwt)
+		{
 			var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
 			var response = new
