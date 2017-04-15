@@ -1,27 +1,30 @@
-﻿using System.Text;
+﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Text;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
+
+using alpine.database.Models;
 
 namespace alpine.authorization
 {
 	public class Startup
-    	{
-		public Startup(IHostingEnvironment env)
+     {
+	     public Startup(IHostingEnvironment env)
 		{
-		    var builder = new ConfigurationBuilder()
-		        .SetBasePath(env.ContentRootPath)
-		        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-		        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-		        .AddEnvironmentVariables();
-		    Configuration = builder.Build();
+	          var builder = new ConfigurationBuilder()
+	               .SetBasePath(env.ContentRootPath)
+		          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+		          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+		          .AddEnvironmentVariables();
+	          Configuration = builder.Build();
 		}
 
 		public IConfigurationRoot Configuration { get; }
@@ -29,26 +32,29 @@ namespace alpine.authorization
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-		    // Add framework services.
+               // Add framework services.
+               services.AddEntityFrameworkSqlServer()
+                    .AddDbContext<alpineContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+               
 		    services.AddMvc();
 		}
 
-			private static readonly string secretKey = "secretsecretsecretsecretkeyABC123!";
+          private static readonly string secretKey = "secretsecretsecretsecretkeyABC123!";
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
-			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+		     loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 		    	loggerFactory.AddDebug();
 
 			var signingCredentials = new SigningCredentials(
-				new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)), SecurityAlgorithms.HmacSha256);
+			     new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)), SecurityAlgorithms.HmacSha256);
 			var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
 			var tokenValidationParameters = new TokenValidationParameters
 			{
 				// The signing key must match!
-				ValidateIssuerSigningKey = true,
+			     ValidateIssuerSigningKey = true,
 				IssuerSigningKey = signingKey,
 
 				// Validate the JWT Issuer (iss) claim
