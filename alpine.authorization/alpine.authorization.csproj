@@ -21,4 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\alpine.database\alpine.database.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json.sample.json" />
+    <Content Remove="appsettings.json.sample.json" />
+  </ItemGroup>
 </Project>

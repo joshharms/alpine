@@ -22,4 +22,8 @@
     <ProjectReference Include="..\alpine.repository\alpine.repository.csproj" />
     <ProjectReference Include="..\alpine.service\alpine.service.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json.sample.json" />
+    <Content Remove="appsettings.json.sample.json" />
+  </ItemGroup>
 </Project>
