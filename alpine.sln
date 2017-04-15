@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.authorization", "alp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.database", "alpine.database\alpine.database.csproj", "{7A406310-8B8F-44DB-A751-429154BC0F01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.repository", "alpine.repository\alpine.repository.csproj", "{36A735F6-D08D-47A6-925B-E60F491AB678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.service", "alpine.service\alpine.service.csproj", "{15C43B62-B643-415B-875F-7FC1EB42661C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{7A406310-8B8F-44DB-A751-429154BC0F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A406310-8B8F-44DB-A751-429154BC0F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A406310-8B8F-44DB-A751-429154BC0F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A735F6-D08D-47A6-925B-E60F491AB678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A735F6-D08D-47A6-925B-E60F491AB678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A735F6-D08D-47A6-925B-E60F491AB678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A735F6-D08D-47A6-925B-E60F491AB678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C43B62-B643-415B-875F-7FC1EB42661C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C43B62-B643-415B-875F-7FC1EB42661C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C43B62-B643-415B-875F-7FC1EB42661C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C43B62-B643-415B-875F-7FC1EB42661C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
@@ -35,7 +47,6 @@ Global
 		$1.IndentWidth = 5
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
-		$2.LabelPositioning = NoIndent
 		$2.scope = text/x-csharp
 	EndGlobalSection
 EndGlobal
