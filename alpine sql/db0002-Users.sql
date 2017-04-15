@@ -12,6 +12,8 @@ CREATE TABLE [dbo].[Users] (
 	[roleId] int NOT NULL,
 	[companyId] int NULL,
 	[avatar] uniqueidentifier NULL,
+	[createdDate] datetime NOT NULL,
+	[createdByUserId] uniqueidentifier NULL,
 );
 
 ALTER TABLE dbo.Users

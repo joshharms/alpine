@@ -18,6 +18,8 @@ namespace alpine.database.Models
         public int RoleId { get; set; }
         public int? CompanyId { get; set; }
         public Guid? Avatar { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public Guid? CreatedByUserId { get; set; }
 
         public virtual Roles Role { get; set; }
     }
