@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using alpine.database.Models;
 using alpine.repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace alpine.api.Controllers
 {
@@ -20,9 +22,11 @@ namespace alpine.api.Controllers
 		}
 
 		// GET api/values
+          [Authorize]
 	     [HttpGet]
           public IActionResult Get()
 		{
+               var username = HttpContext.User.Claims.ToList();
                return SuccessMessage(_repository.GetAll());
 		}   
 
