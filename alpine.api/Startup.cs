@@ -86,6 +86,7 @@ namespace alpine.api
 				{
 					AutomaticAuthenticate = true,
 					AutomaticChallenge = true,
+                         TokenValidationParameters = tokenValidationParameters
 				}
 			);
 		}
