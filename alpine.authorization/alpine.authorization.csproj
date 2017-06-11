@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\alpine.database\alpine.database.csproj" />
+    <ProjectReference Include="..\alpine.service\alpine.service.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Development.json.sample.json" />
