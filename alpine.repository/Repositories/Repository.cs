@@ -7,49 +7,49 @@ using alpine.database.Models;
 
 namespace alpine.repository
 {
-     public class Repository<T> : IRepository<T> where T : class
-     {
-          protected readonly alpineContext context;
-          protected DbSet<T> DbSet;
+    public class Repository<T> : IRepository<T> where T : class
+    {
+        protected readonly alpineContext context;
+        protected DbSet<T> DbSet;
 
-          public Repository(alpineContext alpineContext)
-          {
-               context = alpineContext;
-               DbSet = context.Set<T>();
-          }
+        public Repository( alpineContext alpineContext )
+        {
+            context = alpineContext;
+            DbSet = context.Set<T>();
+        }
 
-          public void Add(T entity)
-          {
-               context.Set<T>().Add(entity);
+        public void Add( T entity )
+        {
+            context.Set<T>().Add( entity );
 
-               Save();
-          }
+            Save();
+        }
 
-          public T Get<TKey>(TKey id)
-          {
-               return DbSet.Find(id);
-          }
+        public T Get<TKey>( TKey id )
+        {
+            return DbSet.Find( id );
+        }
 
-          public IQueryable<T> GetAll()
-          {
-               return DbSet;
-          }
+        public IQueryable<T> GetAll()
+        {
+            return DbSet;
+        }
 
-          public void Update(T entity)
-          {
-               Save();
-          }
+        public void Update( T entity )
+        {
+            Save();
+        }
 
-          private void Save()
-          {
-               context.SaveChanges();
-          }
+        private void Save()
+        {
+            context.SaveChanges();
+        }
 
-          public void Remove<TKey>(TKey id)
-          {
-               context.Remove(DbSet.Find(id));
+        public void Remove<TKey>( TKey id )
+        {
+            context.Remove( DbSet.Find( id ) );
 
-               Save();
-          }
-     }
+            Save();
+        }
+    }
 }

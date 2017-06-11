@@ -12,88 +12,89 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using alpine.database.Models;
+using alpine.service;
 
 namespace alpine.authorization
 {
-	public class Startup
-     {
-	     public Startup(IHostingEnvironment env)
-		{
-	          var builder = new ConfigurationBuilder()
-	               .SetBasePath(env.ContentRootPath)
-		          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-		          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-		          .AddEnvironmentVariables();
-	          Configuration = builder.Build();
-		}
+    public class Startup
+    {
+        public Startup( IHostingEnvironment env )
+        {
+            var builder = new ConfigurationBuilder()
+                 .SetBasePath( env.ContentRootPath )
+                .AddJsonFile( "appsettings.json" , optional: false , reloadOnChange: true )
+                .AddJsonFile( $"appsettings.{env.EnvironmentName}.json" , optional: true )
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
 
-		public IConfigurationRoot Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
-		{
-               // Add framework services.
-               services.AddEntityFrameworkSqlServer()
-                    .AddDbContext<alpineContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-               
-		    services.AddMvc();
-		}
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices( IServiceCollection services )
+        {
+            // Add framework services.
+            services.AddEntityFrameworkSqlServer()
+                 .AddDbContext<alpineContext>( options => options.UseSqlServer( Configuration[ "Data:DefaultConnection:ConnectionString" ] ) );
 
-          private static readonly string secretKey = "secretsecretsecretsecretkeyABC123!";
+            services.AddMvc();
+        }
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-		{
-		     loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-		    	loggerFactory.AddDebug();
+        private static readonly string secretKey = "secretsecretsecretsecretkeyABC123!";
 
-			var signingCredentials = new SigningCredentials(
-			     new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)), SecurityAlgorithms.HmacSha256);
-			var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory )
+        {
+            loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
+            loggerFactory.AddDebug();
 
-			var tokenValidationParameters = new TokenValidationParameters
-			{
-				// The signing key must match!
-			     ValidateIssuerSigningKey = true,
-				IssuerSigningKey = signingKey,
+            var signingCredentials = new SigningCredentials(
+                 new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) ) , SecurityAlgorithms.HmacSha256 );
+            var signingKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) );
 
-				// Validate the JWT Issuer (iss) claim
-				ValidateIssuer = true,
-				ValidIssuer = "ExampleIssuer",
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                // The signing key must match!
+                ValidateIssuerSigningKey = true ,
+                IssuerSigningKey = signingKey ,
 
-				// Validate the JWT Audience (aud) claim
-				ValidateAudience = true,
-				ValidAudience = "ExampleAudience",
+                // Validate the JWT Issuer (iss) claim
+                ValidateIssuer = true ,
+                ValidIssuer = "ExampleIssuer" ,
 
-				// Validate the token expiry
-				ValidateLifetime = true,
+                // Validate the JWT Audience (aud) claim
+                ValidateAudience = true ,
+                ValidAudience = "ExampleAudience" ,
 
-				// If you want to allow a certain amount of clock drift, set that here:
-				ClockSkew = TimeSpan.Zero
-			};
+                // Validate the token expiry
+                ValidateLifetime = true ,
 
-			app.UseSimpleTokenProvider(new TokenProviderOptions
-			{
-				Path = "/token",
-				RefreshPath = "/refresh-token",
-				Audience = "ExampleAudience",
-				Issuer = "ExampleIssuer",
-				SigningCredentials = signingCredentials,
-				IdentityResolver = GetIdentity
-			}, tokenValidationParameters);
+                // If you want to allow a certain amount of clock drift, set that here:
+                ClockSkew = TimeSpan.Zero
+            };
 
-		    	app.UseMvc();
-		}
+            app.UseSimpleTokenProvider( new TokenProviderOptions
+            {
+                Path = "/token" ,
+                RefreshPath = "/refresh-token" ,
+                Audience = "ExampleAudience" ,
+                Issuer = "ExampleIssuer" ,
+                SigningCredentials = signingCredentials ,
+                IdentityResolver = GetIdentity
+            } , tokenValidationParameters );
 
-		Task<ClaimsIdentity> GetIdentity(string username, string password)
-		{
-			if (username == "TEST" && password == "TEST123")
-			{
-				return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(username, "Token"), new Claim[] { }));
-			}
+            app.UseMvc();
+        }
 
-			// Credentials are invalid, or account doesn't exist
-			return Task.FromResult<ClaimsIdentity>(null);
-		}
-	}
+        Task<ClaimsIdentity> GetIdentity( string username , string password )
+        {
+            if ( username == "TEST" && password == "TEST123" )
+            {
+                return Task.FromResult( new ClaimsIdentity( new System.Security.Principal.GenericIdentity( username , "Token" ) , new Claim[] { } ) );
+            }
+
+            // Credentials are invalid, or account doesn't exist
+            return Task.FromResult<ClaimsIdentity>( null );
+        }
+    }
 }
