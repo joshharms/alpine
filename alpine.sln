@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.repository", "alpine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.service", "alpine.service\alpine.service.csproj", "{15C43B62-B643-415B-875F-7FC1EB42661C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.core", "alpine.core\alpine.core.csproj", "{ED0B0957-BC8E-4972-9082-89D24BA087D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,14 +39,16 @@ Global
 		{15C43B62-B643-415B-875F-7FC1EB42661C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C43B62-B643-415B-875F-7FC1EB42661C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C43B62-B643-415B-875F-7FC1EB42661C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
 		$1.FileWidth = 80
-		$1.TabWidth = 5
 		$1.TabsToSpaces = True
-		$1.IndentWidth = 5
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
 		$2.scope = text/x-csharp
