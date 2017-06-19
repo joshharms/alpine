@@ -8,7 +8,7 @@ namespace alpine.service
 {
     public class BaseService : IDisposable
     {
-        protected readonly alpineContext context;
+        public readonly alpineContext context;
 
         public BaseService( alpineContext alpineContext )
         {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace alpine.service.Interfaces
 {
@@ -8,6 +6,7 @@ namespace alpine.service.Interfaces
     {
         bool PasswordStrength( string password );
         bool SetPassword( Guid userId, string password );
-        bool ComparePasswords( string email, string password );
+        bool ChangePassword( Guid linkId, string password );
+        bool ValidatePassword( string email, string password );
     }
 }

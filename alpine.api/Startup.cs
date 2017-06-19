@@ -20,8 +20,8 @@ namespace alpine.api
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath( env.ContentRootPath )
-                .AddJsonFile( "appsettings.json" , optional: false , reloadOnChange: true )
-                .AddJsonFile( $"appsettings.{env.EnvironmentName}.json" , optional: true )
+                .AddJsonFile( "appsettings.json", optional: false, reloadOnChange: true )
+                .AddJsonFile( $"appsettings.{env.EnvironmentName}.json", optional: true )
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -32,20 +32,22 @@ namespace alpine.api
         public void ConfigureServices( IServiceCollection services )
         {
             // Add framework services.
-            services.AddCors( options => options.AddPolicy( "AllowAll" , p => p.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader() ) );
+            services.AddCors( options => options.AddPolicy( "AllowAll", p => p.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader() ) );
 
             services.AddEntityFrameworkSqlServer()
                        .AddDbContext<alpineContext>( options => options.UseSqlServer( Configuration[ "Data:DefaultConnection:ConnectionString" ] ) );
 
-            services.AddScoped( typeof( IRepository<> ) , typeof( Repository<> ) );
+            alpineContext.ConnectionString = Configuration[ "Data:DefaultConnection:ConnectionString" ];
+
+            services.AddScoped( typeof( IRepository<> ), typeof( Repository<> ) );
 
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory )
+        public void Configure( IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory )
         {
             loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
             loggerFactory.AddDebug();
@@ -63,19 +65,19 @@ namespace alpine.api
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signing key must match!
-                ValidateIssuerSigningKey = true ,
-                IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( "secretsecretsecretsecretkeyABC123!" ) ) ,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( "secretsecretsecretsecretkeyABC123!" ) ),
 
                 // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true ,
-                ValidIssuer = "ExampleIssuer" ,
+                ValidateIssuer = true,
+                ValidIssuer = "ExampleIssuer",
 
                 // Validate the JWT Audience (aud) claim
-                ValidateAudience = true ,
-                ValidAudience = "ExampleAudience" ,
+                ValidateAudience = true,
+                ValidAudience = "ExampleAudience",
 
                 // Validate the token expiry
-                ValidateLifetime = true ,
+                ValidateLifetime = true,
 
                 // If you want to allow a certain amount of clock drift, set that here:
                 ClockSkew = TimeSpan.Zero
@@ -84,8 +86,8 @@ namespace alpine.api
             app.UseJwtBearerAuthentication(
                 new JwtBearerOptions
                 {
-                    AutomaticAuthenticate = true ,
-                    AutomaticChallenge = true ,
+                    AutomaticAuthenticate = true,
+                    AutomaticChallenge = true,
                     TokenValidationParameters = tokenValidationParameters
                 }
             );

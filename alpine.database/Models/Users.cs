@@ -5,6 +5,11 @@ namespace alpine.database.Models
 {
     public partial class Users
     {
+        public Users()
+        {
+            UserPasswordResetLinks = new HashSet<UserPasswordResetLinks>();
+        }
+
         public Guid Id { get; set; }
         public int ClusterId { get; set; }
         public bool Active { get; set; }
@@ -21,6 +26,7 @@ namespace alpine.database.Models
         public DateTime CreatedDate { get; set; }
         public Guid? CreatedByUserId { get; set; }
 
+        public virtual ICollection<UserPasswordResetLinks> UserPasswordResetLinks { get; set; }
         public virtual Roles Role { get; set; }
     }
 }
