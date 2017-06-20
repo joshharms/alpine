@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 
 using Newtonsoft.Json;
 
+using alpine.database.Models;
+using alpine.service.Interfaces;
+
 namespace alpine.authorization
 {
     public class TokenProviderMiddleware
@@ -20,13 +23,15 @@ namespace alpine.authorization
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly ILogger _logger;
         private readonly JsonSerializerSettings _serializerSettings;
+        private readonly IRefreshTokenService _refreshTokenService;
 
         public TokenProviderMiddleware(
             RequestDelegate next, IOptions<TokenProviderOptions> options,
-            TokenValidationParameters tokenValidationParameters, ILoggerFactory loggerFactory )
+            TokenValidationParameters tokenValidationParameters, ILoggerFactory loggerFactory, IRefreshTokenService refreshTokenService )
         {
             _next = next;
             _logger = loggerFactory.CreateLogger<TokenProviderMiddleware>();
+            _refreshTokenService = refreshTokenService;
 
             _tokenValidationParameters = tokenValidationParameters;
 
@@ -107,6 +112,7 @@ namespace alpine.authorization
                 notBefore: now,
                 expires: now.Add( _options.Expiration ),
                 signingCredentials: _options.SigningCredentials );
+
             await WriteTokenResponse( context, jwt );
         }
 
