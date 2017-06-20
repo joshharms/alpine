@@ -57,6 +57,11 @@ namespace alpine.authorization
                  new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) ), SecurityAlgorithms.HmacSha256 );
             var signingKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) );
 
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signing key must match!
@@ -88,7 +93,6 @@ namespace alpine.authorization
                 IdentityResolver = GetIdentity
             }, tokenValidationParameters );
 
-            app.UseDeveloperExceptionPage();
             app.UseMvc();
         }
 

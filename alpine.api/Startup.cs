@@ -53,7 +53,11 @@ namespace alpine.api
             loggerFactory.AddDebug();
 
             app.UseCors( "AllowAll" );
-            app.UseDeveloperExceptionPage();
+
+            if( env.IsDevelopment() )
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             ConfigureOAuth( app );
 
