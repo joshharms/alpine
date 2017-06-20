@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using alpine.database.Models;
 using alpine.service;
+using alpine.service.Services;
 using alpine.service.Interfaces;
 
 namespace alpine.authorization
@@ -41,6 +42,8 @@ namespace alpine.authorization
             alpineContext.ConnectionString = Configuration[ "Data:DefaultConnection:ConnectionString" ];
 
             services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            services.AddScoped<IAudienceService, AudienceService>();
 
             services.AddMvc();
         }
@@ -57,7 +60,7 @@ namespace alpine.authorization
                  new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) ), SecurityAlgorithms.HmacSha256 );
             var signingKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) );
 
-            if (env.IsDevelopment())
+            if( env.IsDevelopment() )
             {
                 app.UseDeveloperExceptionPage();
             }
