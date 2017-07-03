@@ -13,18 +13,20 @@ namespace alpine.service.Services
         public RefreshTokenService( alpineContext ctx ) : base( ctx )
         { }
 
-        public async Task<bool> AddRefreshToken( RefreshTokens token )
+        public async Task<RefreshTokens> AddRefreshToken( RefreshTokens token )
         {
             var existingToken = context.RefreshTokens.SingleOrDefault( x => x.Subject == token.Subject && x.ClientId == token.ClientId );
 
-            if( existingToken != null )
+            if ( existingToken != null )
             {
                 var result = await RemoveRefreshToken( existingToken );
             }
 
+            token.Id = Guid.NewGuid().ToString( "n" );
             context.RefreshTokens.Add( token );
+            await context.SaveChangesAsync();
 
-            return await context.SaveChangesAsync() > 0;
+            return token;
 
         }
 
@@ -32,7 +34,7 @@ namespace alpine.service.Services
         {
             var refreshToken = await context.RefreshTokens.FindAsync( refreshTokenId );
 
-            if( refreshToken != null )
+            if ( refreshToken != null )
             {
                 context.RefreshTokens.Remove( refreshToken );
                 return await context.SaveChangesAsync() > 0;

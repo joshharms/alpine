@@ -60,7 +60,7 @@ namespace alpine.authorization
                  new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) ), SecurityAlgorithms.HmacSha256 );
             var signingKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( secretKey ) );
 
-            if( env.IsDevelopment() )
+            if ( env.IsDevelopment() )
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -90,9 +90,7 @@ namespace alpine.authorization
             {
                 Path = "/token",
                 RefreshPath = "/refresh-token",
-                Audience = "ExampleAudience",
-                Issuer = "ExampleIssuer",
-                SigningCredentials = signingCredentials,
+                Issuer = "DefaultIssuer",
                 IdentityResolver = GetIdentity
             }, tokenValidationParameters );
 
@@ -103,7 +101,7 @@ namespace alpine.authorization
         {
             IPasswordService p = new PasswordService( new alpineContext() );
 
-            if( p.ValidatePassword( username, password ) )
+            if ( p.ValidatePassword( username, password ) )
             {
                 return Task.FromResult( new ClaimsIdentity( new System.Security.Principal.GenericIdentity( username, "Token" ), new Claim[] { } ) );
             }

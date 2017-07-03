@@ -8,7 +8,7 @@ namespace alpine.service.Interfaces
 {
     public interface IRefreshTokenService
     {
-        Task<bool> AddRefreshToken( RefreshTokens token );
+        Task<RefreshTokens> AddRefreshToken( RefreshTokens token );
         Task<bool> RemoveRefreshToken( string refreshTokenId );
         Task<bool> RemoveRefreshToken( RefreshTokens refreshToken );
         Task<RefreshTokens> FindRefreshToken( string refreshTokenId );
