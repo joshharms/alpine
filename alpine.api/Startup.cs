@@ -47,7 +47,7 @@ namespace alpine.api
             alpineContext.ConnectionString = Configuration[ "Data:DefaultConnection:ConnectionString" ];
 
             services.AddScoped( typeof( IRepository<> ), typeof( Repository<> ) );
-            services.AddScoped( typeof( ApiKeyAccessor ) );
+            services.AddScoped( typeof( AuthenticationTokenAccessor ) );
             services.AddScoped<IUserService, UserService>();
 
             services.AddMvc( options =>
@@ -71,7 +71,7 @@ namespace alpine.api
 
             ConfigureOAuth( app );
 
-            app.UseApiKey();
+            app.UseAuthenticationToken();
 
             app.UseMvc();
         }

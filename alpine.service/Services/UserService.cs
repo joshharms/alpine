@@ -11,7 +11,7 @@ namespace alpine.service.Services
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService( alpineContext ctx, ApiKeyAccessor key ) : base( ctx, key )
+        public UserService( alpineContext ctx, AuthenticationTokenAccessor auth ) : base( ctx, auth )
         { }
 
         public List<UserSummary> GetUsers()

@@ -18,10 +18,10 @@ namespace alpine.service
             context = alpineContext;
         }
 
-        public BaseService( alpineContext alpineContext, ApiKeyAccessor apiKeyAccessor )
+        public BaseService( alpineContext alpineContext, AuthenticationTokenAccessor authenticationTokenAccessor )
         {
             context = alpineContext;
-            _apiKey = apiKeyAccessor.ApiKey;
+            token = authenticationTokenAccessor.token;
         }
 
         public void Dispose()
