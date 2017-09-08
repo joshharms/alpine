@@ -166,10 +166,13 @@ namespace alpine.authorization
             // You can add other claims here, if you want:
             var claims = new Claim[]
             {
-                new Claim("user_id", user.Id.ToString().ToUpper()),
+                new Claim( "user_id", user.Id.ToString().ToUpper() ),
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim("first_name", user.FirstName),
                 new Claim("last_name", user.LastName),
+                new Claim("role", ""),
+                new Claim("organization_id", ""),
+                new Claim("avatar", ""),
                 new Claim(JwtRegisteredClaimNames.Jti, await _options.NonceGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(now).ToString(), ClaimValueTypes.Integer64),
                 new Claim("client_id", client.Id)

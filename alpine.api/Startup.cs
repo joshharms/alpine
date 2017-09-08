@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using alpine.api.Filters;
 using alpine.database.Models;
 using alpine.repository;
 
@@ -43,7 +44,10 @@ namespace alpine.api
 
             services.AddScoped( typeof( IRepository<> ), typeof( Repository<> ) );
 
-            services.AddMvc();
+            services.AddMvc( options =>
+            {
+                options.Filters.Add( new AlpineExceptionFilter() );
+            } );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +58,7 @@ namespace alpine.api
 
             app.UseCors( "AllowAll" );
 
-            if( env.IsDevelopment() )
+            if ( env.IsDevelopment() )
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -70,15 +74,15 @@ namespace alpine.api
             {
                 // The signing key must match!
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( "secretsecretsecretsecretkeyABC123!" ) ),
+                IssuerSigningKey = new SymmetricSecurityKey( Encoding.ASCII.GetBytes( Configuration[ "AppSettings:Auth:Secret" ] ) ),
 
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = "ExampleIssuer",
+                ValidIssuer = Configuration[ "AppSettings:Auth:Issuer" ],
 
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = "ExampleAudience",
+                ValidAudience = Configuration[ "AppSettings:Auth:Audience" ],
 
                 // Validate the token expiry
                 ValidateLifetime = true,
