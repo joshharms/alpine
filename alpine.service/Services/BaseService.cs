@@ -11,7 +11,6 @@ namespace alpine.service
     {
         public readonly alpineContext context;
         public readonly AuthenticationToken token;
-        public readonly string _apiKey;
 
         public BaseService( alpineContext alpineContext )
         {
