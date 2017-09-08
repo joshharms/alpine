@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.service", "alpine.se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.core", "alpine.core\alpine.core.csproj", "{ED0B0957-BC8E-4972-9082-89D24BA087D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "alpine.infrastructure", "alpine.infrastructure\alpine.infrastructure.csproj", "{16FF5BC9-C45B-48D8-9FDA-2F9FAB5A88BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED0B0957-BC8E-4972-9082-89D24BA087D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16FF5BC9-C45B-48D8-9FDA-2F9FAB5A88BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16FF5BC9-C45B-48D8-9FDA-2F9FAB5A88BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16FF5BC9-C45B-48D8-9FDA-2F9FAB5A88BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16FF5BC9-C45B-48D8-9FDA-2F9FAB5A88BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
@@ -58,5 +64,55 @@ Global
 		$2.SpaceWithinCastParentheses = True
 		$2.SpaceWithinOtherParentheses = True
 		$2.SpaceWithinSquareBrackets = True
+		$0.TextStylePolicy = $3
+		$3.FileWidth = 80
+		$3.TabsToSpaces = True
+		$3.scope = text/plain
+		$0.DotNetNamingPolicy = $4
+		$4.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $5
+		$5.TabsToSpaces = True
+		$5.NoTabsAfterNonTabs = True
+		$5.scope = text/x-fsharp
+		$0.FSharpFormattingPolicy = $6
+		$6.DefaultFormat = $7
+		$7.IndentOnTryWith = False
+		$7.ReorderOpenDeclaration = False
+		$7.SpaceAfterComma = True
+		$7.SpaceAfterSemicolon = True
+		$7.SpaceAroundDelimiter = True
+		$7.SpaceBeforeArgument = True
+		$7.SpaceBeforeColon = True
+		$7.__added = 0
+		$6.scope = text/x-fsharp
+		$0.CSSFormattingPolicy = $8
+		$8.AutomaticFormatting = True
+		$8.BracePositions = SemiExpanded
+		$8.FormatOnPaste = True
+		$8.HierarchicalIndentation = True
+		$8.scope = text/x-css
+		$0.TextStylePolicy = $9
+		$9.TabsToSpaces = True
+		$9.NoTabsAfterNonTabs = True
+		$9.scope = text/x-css
+		$0.HTMLFormattingPolicy = $10
+		$10.FormatOnPaste = True
+		$10.XHTMLCodingStyle = True
+		$10.scope = text/x-html
+		$0.TextStylePolicy = $11
+		$11.TabsToSpaces = True
+		$11.NoTabsAfterNonTabs = True
+		$11.scope = text/x-html
+		$0.JSONFormattingPolicy = $12
+		$12.AutoStructureCompletion = True
+		$12.BracePositions = SemiExpanded
+		$12.FormatOnPaste = True
+		$12.scope = text/x-json
+		$0.TextStylePolicy = $13
+		$13.TabWidth = 2
+		$13.TabsToSpaces = True
+		$13.IndentWidth = 2
+		$13.NoTabsAfterNonTabs = True
+		$13.scope = text/x-json
 	EndGlobalSection
 EndGlobal

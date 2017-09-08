@@ -10,8 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using alpine.api.Filters;
+using alpine.api.Middleware;
+using alpine.core;
 using alpine.database.Models;
 using alpine.repository;
+using alpine.service.Interfaces;
+using alpine.service.Services;
 
 namespace alpine.api
 {
@@ -43,6 +47,8 @@ namespace alpine.api
             alpineContext.ConnectionString = Configuration[ "Data:DefaultConnection:ConnectionString" ];
 
             services.AddScoped( typeof( IRepository<> ), typeof( Repository<> ) );
+            services.AddScoped( typeof( ApiKeyAccessor ) );
+            services.AddScoped<IUserService, UserService>();
 
             services.AddMvc( options =>
             {
@@ -64,6 +70,8 @@ namespace alpine.api
             }
 
             ConfigureOAuth( app );
+
+            app.UseApiKey();
 
             app.UseMvc();
         }

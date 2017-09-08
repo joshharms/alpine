@@ -90,7 +90,7 @@ namespace alpine.authorization
             {
                 Path = "/token",
                 RefreshPath = "/refresh-token",
-                Issuer = "DefaultIssuer",
+                Issuer = "ExampleIssuer",
                 IdentityResolver = GetIdentity
             }, tokenValidationParameters );
 
