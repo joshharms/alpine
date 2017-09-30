@@ -170,7 +170,7 @@ namespace alpine.authorization
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim("first_name", user.FirstName),
                 new Claim("last_name", user.LastName),
-                new Claim("role", ""),
+                new Claim("role", user.Role.Name),
                 new Claim("organization_id", ""),
                 new Claim("avatar", ""),
                 new Claim(JwtRegisteredClaimNames.Jti, await _options.NonceGenerator()),
