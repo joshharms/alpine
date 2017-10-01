@@ -28,17 +28,17 @@ namespace alpine.service.Services
                 Base64Secret = base64Secret
             };
 
-            context.Audiences.Add( a );
-            context.SaveChanges();
+            db.Audiences.Add( a );
+            db.SaveChanges();
 
             return a;
         }
 
         public Audiences GetAudience( Guid id )
         {
-            var audience = context.Audiences.SingleOrDefault( x => x.Id == id );
+            var audience = db.Audiences.SingleOrDefault( x => x.Id == id );
 
-            if( null != audience )
+            if ( null != audience )
             {
                 return audience;
             }

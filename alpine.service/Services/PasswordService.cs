@@ -33,7 +33,7 @@ namespace alpine.service
         private byte[] GetNewSalt()
         {
             byte[] salt = new byte[ 128 / 8 ];
-            using( var rng = RandomNumberGenerator.Create() )
+            using ( var rng = RandomNumberGenerator.Create() )
             {
                 rng.GetBytes( salt );
             }
@@ -43,39 +43,39 @@ namespace alpine.service
 
         public bool PasswordStrength( string password )
         {
-            if( password.Length < 8 )
+            if ( password.Length < 8 )
             {
                 throw new AlpineException( "Password length requirement has not been met" );
             }
 
             int number = 0, symbol = 0, upper = 0, lower = 0;
 
-            for( var i = 0; i < password.Length; i++ )
+            for ( var i = 0; i < password.Length; i++ )
             {
                 char thisChar = password[ i ];
 
-                if( char.IsNumber( thisChar ) )
+                if ( char.IsNumber( thisChar ) )
                 {
                     number++;
                 }
 
-                if( char.IsPunctuation( thisChar ) || char.IsSymbol( thisChar ) )
+                if ( char.IsPunctuation( thisChar ) || char.IsSymbol( thisChar ) )
                 {
                     symbol++;
                 }
 
-                if( char.IsUpper( thisChar ) )
+                if ( char.IsUpper( thisChar ) )
                 {
                     upper++;
                 }
 
-                if( char.IsLower( thisChar ) )
+                if ( char.IsLower( thisChar ) )
                 {
                     lower++;
                 }
             }
 
-            if( number > 0 && symbol > 0 && upper > 0 && lower > 0 )
+            if ( number > 0 && symbol > 0 && upper > 0 && lower > 0 )
             {
                 return true;
             }
@@ -85,11 +85,11 @@ namespace alpine.service
 
         public bool SetPassword( Guid userId, string password )
         {
-            if( PasswordStrength( password ) )
+            if ( PasswordStrength( password ) )
             {
-                var user = context.Users.SingleOrDefault( x => x.Id == userId );
+                var user = db.Users.SingleOrDefault( x => x.Id == userId );
 
-                if( user != null )
+                if ( user != null )
                 {
                     var salt = GetNewSalt();
                     var hashedPassword = HashPassword( password, salt );
@@ -97,7 +97,7 @@ namespace alpine.service
                     user.Password = hashedPassword;
                     user.PasswordLastUpdated = DateTime.UtcNow;
 
-                    context.SaveChanges();
+                    db.SaveChanges();
 
                     return true;
                 }
@@ -108,17 +108,17 @@ namespace alpine.service
 
         public bool ChangePassword( Guid linkId, string password )
         {
-            if( PasswordStrength( password ) )
+            if ( PasswordStrength( password ) )
             {
-                var link = context.UserPasswordResetLinks.SingleOrDefault( x => x.Guid == linkId );
+                var link = db.UserPasswordResetLinks.SingleOrDefault( x => x.Guid == linkId );
 
-                if( link != null )
+                if ( link != null )
                 {
-                    if( DateTime.UtcNow < link.LinkExpiration )
+                    if ( DateTime.UtcNow < link.LinkExpiration )
                     {
-                        var user = context.Users.SingleOrDefault( x => x.Id == link.UserId );
+                        var user = db.Users.SingleOrDefault( x => x.Id == link.UserId );
 
-                        if( user != null )
+                        if ( user != null )
                         {
                             var salt = GetNewSalt();
                             var hashedPassword = HashPassword( password, salt );
@@ -128,7 +128,7 @@ namespace alpine.service
                             user.Password = hashedPassword;
                             user.PasswordLastUpdated = DateTime.UtcNow;
 
-                            context.SaveChanges();
+                            db.SaveChanges();
 
                             return true;
                         }
@@ -143,19 +143,19 @@ namespace alpine.service
 
         public bool ValidatePassword( string email, string password )
         {
-            var currentPassword = context.Users.Where( x => x.Email == email ).SingleOrDefault().Password;
+            var currentPassword = db.Users.Where( x => x.Email == email ).SingleOrDefault().Password;
 
             Random r = new Random();
             System.Threading.Thread.Sleep( r.Next( 300, 1500 ) );
 
-            if( currentPassword != null )
+            if ( currentPassword != null )
             {
                 byte[] salt = Convert.FromBase64String( currentPassword.GetSaltFromPassword() );
                 var iteration = currentPassword.GetIterationFromPassword();
 
                 var passwordInput = HashPassword( password, salt, iteration );
 
-                if( currentPassword.GetHashFromPassword() == passwordInput.GetHashFromPassword() )
+                if ( currentPassword.GetHashFromPassword() == passwordInput.GetHashFromPassword() )
                 {
                     return true;
                 }
@@ -171,7 +171,7 @@ namespace alpine.service
         {
             var components = dbPassword.Split( ':' );
 
-            if( components.Length == 3 )
+            if ( components.Length == 3 )
             {
                 return Convert.ToInt32( components[ 0 ] );
             }
@@ -183,7 +183,7 @@ namespace alpine.service
         {
             var components = dbPassword.Split( ':' );
 
-            if( components.Length == 3 )
+            if ( components.Length == 3 )
             {
                 return components[ 1 ];
             }
@@ -195,7 +195,7 @@ namespace alpine.service
         {
             var components = dbPassword.Split( ':' );
 
-            if( components.Length == 3 )
+            if ( components.Length == 3 )
             {
                 return components[ 2 ];
             }

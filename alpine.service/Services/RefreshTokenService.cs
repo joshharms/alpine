@@ -15,7 +15,7 @@ namespace alpine.service.Services
 
         public async Task<RefreshTokens> AddRefreshToken( RefreshTokens token )
         {
-            var existingToken = context.RefreshTokens.SingleOrDefault( x => x.Subject == token.Subject && x.ClientId == token.ClientId );
+            var existingToken = db.RefreshTokens.SingleOrDefault( x => x.Subject == token.Subject && x.ClientId == token.ClientId );
 
             if ( existingToken != null )
             {
@@ -23,8 +23,8 @@ namespace alpine.service.Services
             }
 
             token.Id = Guid.NewGuid().ToString( "n" );
-            context.RefreshTokens.Add( token );
-            await context.SaveChangesAsync();
+            db.RefreshTokens.Add( token );
+            await db.SaveChangesAsync();
 
             return token;
 
@@ -32,12 +32,12 @@ namespace alpine.service.Services
 
         public async Task<bool> RemoveRefreshToken( string refreshTokenId )
         {
-            var refreshToken = await context.RefreshTokens.FindAsync( refreshTokenId );
+            var refreshToken = await db.RefreshTokens.FindAsync( refreshTokenId );
 
             if ( refreshToken != null )
             {
-                context.RefreshTokens.Remove( refreshToken );
-                return await context.SaveChangesAsync() > 0;
+                db.RefreshTokens.Remove( refreshToken );
+                return await db.SaveChangesAsync() > 0;
             }
 
             return false;
@@ -45,19 +45,19 @@ namespace alpine.service.Services
 
         public async Task<bool> RemoveRefreshToken( RefreshTokens refreshToken )
         {
-            context.RefreshTokens.Remove( refreshToken );
-            return await context.SaveChangesAsync() > 0;
+            db.RefreshTokens.Remove( refreshToken );
+            return await db.SaveChangesAsync() > 0;
         }
 
         public async Task<RefreshTokens> FindRefreshToken( string refreshTokenId )
         {
-            var refreshToken = await context.RefreshTokens.FindAsync( refreshTokenId );
+            var refreshToken = await db.RefreshTokens.FindAsync( refreshTokenId );
             return refreshToken;
         }
 
         public List<RefreshTokens> GetAllRefreshTokens()
         {
-            return context.RefreshTokens.ToList();
+            return db.RefreshTokens.ToList();
         }
     }
 }
