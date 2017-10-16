@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -50,7 +51,7 @@ namespace alpine.authorization
 
             _serializerSettings = new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented
+                Formatting = Newtonsoft.Json.Formatting.Indented
             };
         }
 
@@ -131,7 +132,7 @@ namespace alpine.authorization
 
         private async Task GenerateToken( HttpContext context, string username, Guid audienceId, string clientId )
         {
-            var user = _dbContext.Users.FirstOrDefault( x => x.Email.Equals( username ) );
+            var user = _dbContext.Users.Include( x => x.Role ).FirstOrDefault( x => x.Email.Equals( username ) );
             if ( user == null )
             {
                 context.Response.StatusCode = 400;

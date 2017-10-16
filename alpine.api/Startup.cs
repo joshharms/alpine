@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,8 @@ namespace alpine.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices( IServiceCollection services )
         {
+            ConfigureOAuth( services );
+
             // Add framework services.
             services.AddCors( options => options.AddPolicy( "AllowAll", p => p.AllowAnyOrigin()
                   .AllowAnyMethod()
@@ -69,14 +72,15 @@ namespace alpine.api
                 app.UseDeveloperExceptionPage();
             }
 
-            ConfigureOAuth( app );
+            app.UseAuthentication();
 
+            //Provides the token to be used by services, must come after "app.UseAuthentication();"
             app.UseAuthenticationToken();
 
             app.UseMvc();
         }
 
-        public void ConfigureOAuth( IApplicationBuilder app )
+        public void ConfigureOAuth( IServiceCollection services )
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -99,14 +103,11 @@ namespace alpine.api
                 ClockSkew = TimeSpan.Zero
             };
 
-            app.UseJwtBearerAuthentication(
-                new JwtBearerOptions
+            services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme )
+                .AddJwtBearer( options =>
                 {
-                    AutomaticAuthenticate = true,
-                    AutomaticChallenge = true,
-                    TokenValidationParameters = tokenValidationParameters
-                }
-            );
+                    options.TokenValidationParameters = tokenValidationParameters;
+                } );
         }
     }
 }
