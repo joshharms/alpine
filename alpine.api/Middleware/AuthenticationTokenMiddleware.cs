@@ -22,7 +22,9 @@ namespace alpine.api.Middleware
         public Task Invoke( HttpContext context, AuthenticationTokenAccessor authenticationTokenAccessor )
         {
             authenticationTokenAccessor.token = GetToken( context );
+
             return _next( context );
+
         }
 
         protected AuthenticationToken GetToken( HttpContext httpContext )
@@ -31,19 +33,22 @@ namespace alpine.api.Middleware
 
             AuthenticationToken token = new AuthenticationToken();
 
-            try
+            if ( claims.Any( c => c.Type == "user_id" ) )
             {
-                token.userId = Guid.Parse( claims.Where( x => x.Type == "user_id" ).Select( x => x.Value ).Single() );
-                token.email = claims.Where( x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" ).Select( x => x.Value ).Single();
-                token.firstName = claims.Where( x => x.Type == "first_name" ).Select( x => x.Value ).Single();
-                token.lastName = claims.Where( x => x.Type == "last_name" ).Select( x => x.Value ).Single();
-                token.role = claims.Where( x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" ).Select( x => x.Value ).Single();
-                //token.organizationId = Guid.Parse( claims.Where( x => x.Type == "organization_id" ).Select( x => x.Value ).Single() );
-                token.avatar = claims.Where( x => x.Type == "avatar" ).Select( x => x.Value ).Single();
-            }
-            catch ( Exception ex )
-            {
-                throw ex;
+                try
+                {
+                    token.userId = Guid.Parse( claims.Where( x => x.Type == "user_id" ).Select( x => x.Value ).Single() );
+                    token.email = claims.Where( x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" ).Select( x => x.Value ).Single();
+                    token.firstName = claims.Where( x => x.Type == "first_name" ).Select( x => x.Value ).Single();
+                    token.lastName = claims.Where( x => x.Type == "last_name" ).Select( x => x.Value ).Single();
+                    token.role = claims.Where( x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" ).Select( x => x.Value ).Single();
+                    //token.organizationId = Guid.Parse( claims.Where( x => x.Type == "organization_id" ).Select( x => x.Value ).Single() );
+                    token.avatar = claims.Where( x => x.Type == "avatar" ).Select( x => x.Value ).Single();
+                }
+                catch ( Exception ex )
+                {
+                    throw new AlpineException( ex.InnerException.Message );
+                }
             }
 
             return token;

@@ -50,13 +50,14 @@ namespace alpine.api
             alpineContext.ConnectionString = Configuration[ "Data:DefaultConnection:ConnectionString" ];
 
             services.AddScoped( typeof( IRepository<> ), typeof( Repository<> ) );
-            services.AddScoped( typeof( AuthenticationTokenAccessor ) );
             services.AddScoped<IUserService, UserService>();
 
             services.AddMvc( options =>
             {
                 options.Filters.Add( new AlpineExceptionFilter() );
             } );
+
+            services.AddScoped( typeof( AuthenticationTokenAccessor ) );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
