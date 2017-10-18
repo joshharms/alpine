@@ -11,7 +11,7 @@ using alpine.service.Services;
 
 namespace alpine.api.Controllers
 {
-    [Route( "api/[controller]" )]
+    [Route( "v1/[controller]" )]
     public class UserController : DataController
     {
         private readonly IUserService _users;
@@ -21,12 +21,11 @@ namespace alpine.api.Controllers
             _users = users;
         }
 
-        // GET api/user
+        // GET v1/user
         [HttpGet]
         [Authorize]
         public JsonResult Get()
         {
-            var a = GetToken();
             return SuccessMessage( _users.GetUsers() );
         }
     }
