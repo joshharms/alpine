@@ -10,7 +10,6 @@ using alpine.database.Models;
 
 namespace alpine.api.Controllers
 {
-    [Route( "api/[controller]" )]
     public class DataController : Controller
     {
         protected AuthenticationToken GetToken()
@@ -37,9 +36,13 @@ namespace alpine.api.Controllers
         {
             return Json( new
             {
-                time = DateTime.UtcNow,
-                success = true,
-                results = data
+                meta = new
+                {
+                    success = true,
+                    status = 200,
+                    time = DateTime.UtcNow
+                },
+                data
             } );
         }
     }
