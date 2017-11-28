@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +19,8 @@ using alpine.database.Models;
 using alpine.repository;
 using alpine.service.Interfaces;
 using alpine.service.Services;
+
+using Newtonsoft.Json;
 
 namespace alpine.api
 {
@@ -55,6 +59,10 @@ namespace alpine.api
             services.AddMvc( options =>
             {
                 options.Filters.Add( new AlpineExceptionFilter() );
+            } ).AddJsonOptions( options =>
+            {
+                //Ignore null values in json responses
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             } );
 
             services.AddScoped( typeof( AuthenticationTokenAccessor ) );
@@ -77,6 +85,8 @@ namespace alpine.api
 
             //Provides the token to be used by services, must come after "app.UseAuthentication();"
             app.UseAuthenticationToken();
+
+            //app.UseMiddleware( typeof( AlpineErrorMiddleware ) );
 
             app.UseMvc();
         }
@@ -108,6 +118,27 @@ namespace alpine.api
                 .AddJwtBearer( options =>
                 {
                     options.TokenValidationParameters = tokenValidationParameters;
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = ( context ) =>
+                        {
+                            if ( context.Exception is SecurityTokenExpiredException )
+                            {
+                                //set this state makes it works. I got 440 statuscode in Postman.
+                                //context.State = Microsoft.AspNetCore.Authentication.EventResultState.HandledResponse;
+
+                                context.NoResult();
+
+                                context.Response.StatusCode = 498;
+                                context.Response.ContentType = "application/json";
+
+                                var error = new AlpineCreateResponse().Error( 498, "Access token has expired.", null, false );
+                                return context.Response.WriteAsync( JsonConvert.SerializeObject( error ) );
+                            }
+
+                            return Task.FromResult( 0 );
+                        }
+                    };
                 } );
         }
     }

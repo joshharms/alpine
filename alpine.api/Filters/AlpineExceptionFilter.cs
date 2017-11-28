@@ -24,15 +24,16 @@ namespace alpine.api.Filters
                 message = ex.Message;
             }
 
-            var errorData = new { success = false, message = "An error has occured.", extraMessage = message, alpine = false };
+            var error = new AlpineCreateResponse().Error( ( int )HttpStatusCode.BadRequest, "An error has occured.", message, false );
 
             if ( exception is AlpineException )
             {
-                errorData = new { success = false, message = exception.Message, extraMessage = "", alpine = ( exception is AlpineException ) };
+                error = new AlpineCreateResponse().Error( ( int )HttpStatusCode.BadRequest, exception.Message, "", ( exception is AlpineException ) );
             }
 
             if ( exception is UnauthorizedAccessException )
             {
+                error.Meta.Code = ( int )HttpStatusCode.Unauthorized;
                 context.HttpContext.Response.StatusCode = ( int )HttpStatusCode.Unauthorized;
             }
             else
@@ -41,7 +42,7 @@ namespace alpine.api.Filters
             }
 
 
-            context.Result = new JsonResult( errorData );
+            context.Result = new JsonResult( error );
 
             base.OnException( context );
         }

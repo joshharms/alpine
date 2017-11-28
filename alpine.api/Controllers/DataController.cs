@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 
 using alpine.core;
-using alpine.database.Models;
 
 namespace alpine.api.Controllers
 {
@@ -34,16 +31,7 @@ namespace alpine.api.Controllers
 
         protected JsonResult SuccessMessage( object data = null )
         {
-            return Json( new
-            {
-                meta = new
-                {
-                    success = true,
-                    status = 200,
-                    time = DateTime.UtcNow
-                },
-                data
-            } );
+            return Json( new AlpineCreateResponse().Success( 200, data ) );
         }
     }
 }
