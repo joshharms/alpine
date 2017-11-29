@@ -141,23 +141,28 @@ namespace alpine.service
             throw new AlpineException( "Could not set password." );
         }
 
-        public bool ValidatePassword( string email, string password )
+        public bool ValidatePassword( string email, string password, bool countAgainstAccessFailed = true )
         {
-            var currentPassword = db.Users.Where( x => x.Email == email ).SingleOrDefault().Password;
+            var user = db.Users.Where( x => x.Email == email ).SingleOrDefault();
 
             Random r = new Random();
             System.Threading.Thread.Sleep( r.Next( 300, 1500 ) );
 
-            if ( currentPassword != null )
+            if ( user.Password != null )
             {
-                byte[] salt = Convert.FromBase64String( currentPassword.GetSaltFromPassword() );
-                var iteration = currentPassword.GetIterationFromPassword();
+                byte[] salt = Convert.FromBase64String( user.Password.GetSaltFromPassword() );
+                var iteration = user.Password.GetIterationFromPassword();
 
                 var passwordInput = HashPassword( password, salt, iteration );
 
-                if ( currentPassword.GetHashFromPassword() == passwordInput.GetHashFromPassword() )
+                if ( user.Password.GetHashFromPassword() == passwordInput.GetHashFromPassword() )
                 {
                     return true;
+                }
+                if ( countAgainstAccessFailed )
+                {
+                    user.AccessFailedCount++;
+                    db.SaveChanges();
                 }
             }
 
