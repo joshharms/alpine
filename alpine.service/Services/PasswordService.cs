@@ -157,6 +157,9 @@ namespace alpine.service
 
                 if ( user.Password.GetHashFromPassword() == passwordInput.GetHashFromPassword() )
                 {
+                    user.AccessFailedCount = 0;
+                    db.SaveChanges();
+
                     return true;
                 }
                 if ( countAgainstAccessFailed )
