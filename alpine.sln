@@ -58,12 +58,6 @@ Global
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
 		$2.scope = text/x-csharp
-		$2.SpaceWithinMethodDeclarationParenthesis = True
-		$2.SpaceWithinMethodCallParentheses = True
-		$2.SpaceWithinExpressionParentheses = True
-		$2.SpaceWithinCastParentheses = True
-		$2.SpaceWithinOtherParentheses = True
-		$2.SpaceWithinSquareBrackets = True
 		$0.TextStylePolicy = $3
 		$3.FileWidth = 80
 		$3.TabsToSpaces = True
